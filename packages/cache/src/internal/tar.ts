@@ -11,6 +11,7 @@ import {
   TarFilename,
   ManifestFilename
 } from './constants'
+import { ExtraTarArgs } from '../options'
 
 const IS_WINDOWS = process.platform === 'win32'
 
@@ -128,7 +129,8 @@ async function getTarArgs(
 async function getCommands(
   compressionMethod: CompressionMethod,
   type: string,
-  archivePath = ''
+  archivePath = '',
+  extraTarArgs: string[] = []
 ): Promise<string[]> {
   let args
 
@@ -139,6 +141,7 @@ async function getCommands(
     type,
     archivePath
   )
+  tarArgs.push(...extraTarArgs)
   const compressionArgs =
     type !== 'create'
       ? await getDecompressionProgram(tarPath, compressionMethod, archivePath)
@@ -272,12 +275,13 @@ export async function listTar(
 // Extract a tar
 export async function extractTar(
   archivePath: string,
-  compressionMethod: CompressionMethod
+  compressionMethod: CompressionMethod,
+  extraTarArgs: ExtraTarArgs = []
 ): Promise<void> {
   // Create directory to extract tar into
   const workingDirectory = getWorkingDirectory()
   await io.mkdirP(workingDirectory)
-  const commands = await getCommands(compressionMethod, 'extract', archivePath)
+  const commands = await getCommands(compressionMethod, 'extract', archivePath, extraTarArgs)
   await execCommands(commands)
 }
 
