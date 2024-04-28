@@ -257,6 +257,7 @@ async function execCommands(commands: string[], cwd?: string): Promise<void> {
       })
     } catch (error) {
       throw new Error(
+        // @ts-ignore
         `${command.split(' ')[0]} failed with error: ${error?.message}`
       )
     }
