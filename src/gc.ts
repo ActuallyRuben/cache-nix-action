@@ -7,7 +7,7 @@ import * as utils from "./utils/actionUtils";
 export async function collectGarbage() {
     core.info("Collecting garbage");
 
-    await exec("bash", ["-c", "sudo rm -rf /nix/.[!.]* /nix/..?*"]);
+    await exec("bash", ["-c", "rm -rf /nix/.[!.]* /nix/..?*"]);
 
     const gcEnabled = utils.getInputAsBool(
         process.platform == "darwin" ? Inputs.GCMacos : Inputs.GCLinux,
